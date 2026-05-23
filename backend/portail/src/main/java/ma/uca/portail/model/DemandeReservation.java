@@ -50,8 +50,8 @@ public class DemandeReservation {
     private LocalDateTime dateSoumission;
 
     public enum Statut {
-        EN_ATTENTE, CONFIRMÉ, REFUSÉ
-    }
+    EN_ATTENTE, CONFIRMÉ, REFUSÉ, ANNULE
+}
 
     public enum Departement {
         CHIMIE("Chimie"),

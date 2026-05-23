@@ -3,12 +3,14 @@ package ma.uca.portail.service;
 import lombok.RequiredArgsConstructor;
 import ma.uca.portail.dto.DemandeReservationDtos;
 import ma.uca.portail.dto.UtilisateurDtos;
+import ma.uca.portail.exception.ConflitException;
 import ma.uca.portail.exception.NotFoundException;
 import ma.uca.portail.model.DemandeReservation;
 import ma.uca.portail.model.DemandeReservation.Statut;
 import ma.uca.portail.model.Utilisateur;
 import ma.uca.portail.repository.DemandeReservationRepository;
 import ma.uca.portail.repository.UtilisateurRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +24,12 @@ public class AdminService {
     private final UtilisateurRepository        utilisateurRepo;
     private final DemandeReservationRepository demandeRepo;
     private final ReservationService           reservationService;
+    private final PasswordEncoder              passwordEncoder;  // ← AJOUTER CETTE LIGNE
 
     // ── Dashboard ─────────────────────────────────────────
 
     @Transactional(readOnly = true)
     public Map<String, Object> getStats() {
-
         long total      = demandeRepo.count();
         long enAttente  = demandeRepo.countByStatut(Statut.EN_ATTENTE);
         long confirmees = demandeRepo.countByStatut(Statut.CONFIRMÉ);
@@ -37,17 +39,12 @@ public class AdminService {
             ? Math.round((confirmees * 100.0 / total) * 10.0) / 10.0
             : 0;
 
-        // Conflits : même salle + date + créneau, statut != REFUSÉ
         long conflits = demandeRepo.findAll().stream()
             .filter(d -> d.getStatut() != Statut.REFUSÉ)
             .collect(Collectors.groupingBy(
-                d -> d.getSalle() + "|" +
-                     d.getDate()  + "|" +
-                     d.getCreneau(),
+                d -> d.getSalle() + "|" + d.getDate() + "|" + d.getCreneau(),
                 Collectors.counting()))
-            .values().stream()
-            .filter(count -> count > 1)
-            .count();
+            .values().stream().filter(c -> c > 1).count();
 
         Map<String, Object> stats = new LinkedHashMap<>();
         stats.put("demandesTotal",    total);
@@ -73,9 +70,7 @@ public class AdminService {
 
     @Transactional
     public DemandeReservationDtos.DemandeResponse changerStatut(
-            Long id,
-            DemandeReservation.Statut decision,
-            String motif) {
+            Long id, DemandeReservation.Statut decision, String motif) {
         return reservationService.changerStatut(id, decision, motif);
     }
 
@@ -93,21 +88,44 @@ public class AdminService {
             Long id, UtilisateurDtos.UpdateRequest req) {
 
         Utilisateur u = utilisateurRepo.findById(id)
-                .orElseThrow(() ->
-                    new NotFoundException("Utilisateur introuvable"));
+                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable"));
 
-        if (req.getPrenom() != null) u.setPrenom(req.getPrenom());
-        if (req.getNom()    != null) u.setNom(req.getNom());
-        if (req.getRole()   != null) u.setRole(req.getRole());
+        if (req.getPrenom()         != null) u.setPrenom(req.getPrenom());
+        if (req.getNom()            != null) u.setNom(req.getNom());
+        if (req.getRole()           != null) u.setRole(req.getRole());
+        if (req.getDepartement()    != null) u.setDepartement(req.getDepartement());
+        if (req.getNumeroEtudiant() != null) u.setNumeroEtudiant(req.getNumeroEtudiant());
 
-        return UtilisateurDtos.UtilisateurResponse
-                .from(utilisateurRepo.save(u));
+        // AJOUT : Hasher le mot de passe s'il est fourni
+        if (req.getMotDePasse() != null && !req.getMotDePasse().isBlank()) {
+            if (req.getMotDePasse().length() < 6) {
+                throw new IllegalArgumentException("Le mot de passe doit contenir au moins 6 caractères.");
+            }
+            String hashedPassword = passwordEncoder.encode(req.getMotDePasse());
+            u.setMotDePasse(hashedPassword);
+            System.out.println("🔐 Mot de passe hashé pour " + u.getEmail());
+        }
+
+        // Email : vérifier unicité si changé
+        if (req.getEmail() != null && !req.getEmail().equals(u.getEmail())) {
+            if (utilisateurRepo.existsByEmail(req.getEmail()))
+                throw new ConflitException("Cet email est déjà utilisé.");
+            u.setEmail(req.getEmail());
+        }
+
+        return UtilisateurDtos.UtilisateurResponse.from(utilisateurRepo.save(u));
     }
 
     @Transactional
     public void supprimerUtilisateur(Long id) {
-        if (!utilisateurRepo.existsById(id))
-            throw new NotFoundException("Utilisateur introuvable");
-        utilisateurRepo.deleteById(id);
+        Utilisateur u = utilisateurRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable"));
+
+        // Supprimer les demandes liées avant de supprimer l'utilisateur
+        List<DemandeReservation> demandes = demandeRepo.findByOrganisateur(u);
+        demandeRepo.deleteAll(demandes);
+        demandeRepo.flush();
+
+        utilisateurRepo.delete(u);
     }
 }

@@ -36,6 +36,10 @@ public class UtilisateurDtos {
     public static class UpdateRequest {
         private String prenom;
         private String nom;
+        private String email;           
+        private String numeroEtudiant;  
         private Utilisateur.Role role;
+        private Utilisateur.Departement departement; 
+        private String motDePasse;       
     }
 }

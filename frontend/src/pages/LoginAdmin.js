@@ -1,24 +1,49 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
+import { useAuth } from '../contexts/AuthContext'
 
 function LoginAdmin() {
   const [voirMDP, setVoirMDP] = useState(false)
   const [email, setEmail]     = useState('')
   const [mdp, setMdp]         = useState('')
-  const navigate              = useNavigate()
+  const [erreur, setErreur]   = useState('')
+  const [chargement, setChargement] = useState(false)
+  const navigate = useNavigate()
+  const { login } = useAuth()
 
-  const handleConnexion = (e) => {
+  const handleConnexion = async (e) => {
     e.preventDefault()
-    if (email && mdp) {
-      localStorage.setItem('user', JSON.stringify({ role: 'admin', nom: 'Admin' }))
+    if (!email || !mdp) {
+      setErreur('Veuillez remplir tous les champs.')
+      return
+    }
+
+    setChargement(true)
+    setErreur('')
+
+    try {
+      const response = await login(email, mdp)
+      const role = response.utilisateur?.role
+
+      if (role !== 'ADMIN') {
+        // Compte non-admin → accès refusé
+        setErreur('Accès refusé. Ce portail est réservé aux administrateurs.')
+        // On déconnecte immédiatement pour ne pas garder le token
+        import('../services/api').then(({ clearAuth }) => clearAuth())
+        return
+      }
+
       navigate('/admin/dashboard')
+    } catch (error) {
+      setErreur('Email ou mot de passe incorrect.')
+    } finally {
+      setChargement(false)
     }
   }
 
   return (
     <div className="min-h-screen flex flex-col">
-
       <main className="flex-grow flex items-center justify-center px-6 pt-8 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 max-w-6xl w-full gap-8 items-center">
 
@@ -81,7 +106,7 @@ function LoginAdmin() {
 
                   <div className="space-y-2">
                     <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">
-                      Mot de passe (votre CNE) en minuscule
+                      Mot de passe
                     </label>
                     <div className="relative">
                       <input
@@ -103,11 +128,25 @@ function LoginAdmin() {
                     </div>
                   </div>
 
+                  {/* Message d'erreur */}
+                  {erreur && (
+                    <div className="bg-error/10 border border-error/30 text-error text-sm px-4 py-3 rounded-lg flex items-center gap-2">
+                      <span className="material-symbols-outlined text-base">error</span>
+                      {erreur}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-4 rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98]"
+                    disabled={chargement}
+                    className="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-4 rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Se connecter
+                    {chargement ? (
+                      <>
+                        <span className="material-symbols-outlined animate-spin text-base">progress_activity</span>
+                        Connexion en cours...
+                      </>
+                    ) : 'Se connecter'}
                   </button>
                 </form>
 

@@ -1,8 +1,9 @@
 function FiltreReservations({ filtreActif, onFiltreChange }) {
-  const filtres = ['Tout', 'Confirmé', 'En attente']
+  // ← ajout de 'Refusé'
+  const filtres = ['Tout', 'Confirmé', 'En attente', 'Refusé']
 
   return (
-    <div className="flex gap-3 mb-8">
+    <div className="flex flex-wrap gap-3 mb-8">
       {filtres.map((filtre) => (
         <button
           key={filtre}

@@ -59,33 +59,35 @@ public class ReservationService {
     }
 
     /** Annuler sa propre demande */
+
     @Transactional
     public DemandeReservationDtos.DemandeResponse annuler(
             Utilisateur organisateur, Long id) {
 
         DemandeReservation d = findOrThrow(id);
 
-        // Vérifier que c'est bien sa demande
-        if (!d.getOrganisateur().getId().equals(organisateur.getId()))
-            throw new SecurityException("Accès refusé");
+    // Vérifier que c'est bien sa demande
+    if (!d.getOrganisateur().getId().equals(organisateur.getId()))
+        throw new SecurityException("Accès refusé");
 
-        // Ne peut pas annuler une demande déjà confirmée
-        if (d.getStatut() == Statut.CONFIRMÉ)
-            throw new ConflitException(
-                "Demande déjà confirmée, contactez l'administrateur");
+    // Ne peut pas annuler une demande déjà confirmée
+    if (d.getStatut() == Statut.CONFIRMÉ)
+        throw new ConflitException(
+            "Demande déjà confirmée, contactez l'administrateur");
 
-        // Ne peut pas annuler une demande déjà refusée
-        if (d.getStatut() == Statut.REFUSÉ)
-            throw new ConflitException(
-                "Cette demande est déjà refusée");
+    // Ne peut pas annuler une demande déjà refusée
+    if (d.getStatut() == Statut.REFUSÉ)
+        throw new ConflitException(
+            "Cette demande est déjà refusée");
 
-        d.setStatut(Statut.REFUSÉ);
-        d.setMotifRefus("Annulé par l'organisateur");
-        d.setDateDecision(LocalDateTime.now());
+    // CORRECTION : Utiliser ANNULE au lieu de REFUSÉ
+    d.setStatut(Statut.ANNULE);  // ← Changement important
+    d.setMotifRefus("Annulé par l'organisateur");
+    d.setDateDecision(LocalDateTime.now());
 
-        return DemandeReservationDtos.DemandeResponse
-                .from(demandeRepo.save(d));
-    }
+    return DemandeReservationDtos.DemandeResponse
+            .from(demandeRepo.save(d));
+}
 
     // ── Admin ─────────────────────────────────────────────
 

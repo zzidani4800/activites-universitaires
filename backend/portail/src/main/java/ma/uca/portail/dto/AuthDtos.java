@@ -6,13 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import ma.uca.portail.model.Utilisateur;
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  DTOs d'Authentification
-// ─────────────────────────────────────────────────────────────────────────────
-
 public class AuthDtos {
 
-    /** Requête de connexion (étudiant ou admin) */
     @Data
     public static class LoginRequest {
         @Email @NotBlank
@@ -21,18 +16,18 @@ public class AuthDtos {
         private String motDePasse;
     }
 
-    /** Réponse JWT après connexion */
+    /** Réponse JWT — prenom et nom séparés pour le frontend */
     @Data @lombok.AllArgsConstructor
     public static class LoginResponse {
         private String token;
-        private String type = "Bearer";
-        private Long id;
-        private String nom;
+        private String type;
+        private Long   id;
+        private String prenom;   
+        private String nom;      
         private String email;
         private Utilisateur.Role role;
     }
 
-    /** Inscription d'un nouvel utilisateur */
     @Data
     public static class RegisterRequest {
         @NotBlank private String prenom;

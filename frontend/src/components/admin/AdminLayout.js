@@ -1,21 +1,23 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
 import AdminDashboard    from './AdminDashboard'
 import AdminEvenements   from './AdminEvenements'
 import AdminUtilisateurs from './AdminUtilisateurs'
 
 const ONGLETS = [
-  { id: 'dashboard',     label: 'Dashboard',      icone: 'dashboard' },
-  { id: 'evenements',    label: 'Événements',     icone: 'calendar_month' },
-  { id: 'utilisateurs',  label: 'Utilisateurs',   icone: 'group' },
+  { id: 'dashboard',    label: 'Dashboard',    icone: 'dashboard' },
+  { id: 'evenements',   label: 'Événements',   icone: 'calendar_month' },
+  { id: 'utilisateurs', label: 'Utilisateurs', icone: 'group' },
 ]
 
 function AdminLayout() {
   const [ongletActif, setOngletActif] = useState('dashboard')
   const navigate = useNavigate()
+  const { user, logout } = useAuth()   // ← utilise le vrai logout du contexte
 
   const handleDeconnexion = () => {
-    localStorage.removeItem('user')
+    logout()                           // supprime token + met user=null dans le contexte
     navigate('/login-admin')
   }
 
@@ -42,14 +44,26 @@ function AdminLayout() {
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-[9px] text-outline tracking-widest uppercase">Session Admin</p>
-              <p className="text-sm font-bold text-on-surface">Admin</p>
+              {/* Affiche le vrai nom de l'admin connecté */}
+              <p className="text-sm font-bold text-on-surface">
+                {user?.prenom} {user?.nom}
+              </p>
             </div>
             <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
+              <span className="text-white font-bold text-sm">
+                {user?.prenom?.[0]?.toUpperCase() ?? 'A'}
+              </span>
             </div>
+            <Link
+              to="/admin/creer-utilisateur"
+              className="bg-primary text-white px-4 py-2 rounded-lg font-bold hover:bg-primary-container transition-colors text-sm"
+            >
+              + Créer un utilisateur
+            </Link>
             <button
               onClick={handleDeconnexion}
-              className="text-sm text-on-surface-variant hover:text-primary transition-colors ml-2"
+              title="Se déconnecter"
+              className="text-sm text-on-surface-variant hover:text-primary transition-colors"
             >
               <span className="material-symbols-outlined text-xl">logout</span>
             </button>

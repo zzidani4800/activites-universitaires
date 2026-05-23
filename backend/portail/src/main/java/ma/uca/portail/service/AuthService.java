@@ -19,7 +19,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
-    /** Connexion — retourne un JWT si les identifiants sont valides */
+    private AuthDtos.LoginResponse toResponse(Utilisateur user, String token) {
+        return new AuthDtos.LoginResponse(
+            token,
+            "Bearer",
+            user.getId(),
+            user.getPrenom(),   
+            user.getNom(),      
+            user.getEmail(),
+            user.getRole()
+        );
+    }
+
     @Transactional(readOnly = true)
     public AuthDtos.LoginResponse login(AuthDtos.LoginRequest req) {
         Utilisateur user = utilisateurRepo.findByEmail(req.getEmail())
@@ -29,17 +40,9 @@ public class AuthService {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
 
-        String token = jwtUtils.genererToken(user);
-        return new AuthDtos.LoginResponse(
-                token, "Bearer",
-                user.getId(),
-                user.getPrenom() + " " + user.getNom(),
-                user.getEmail(),
-                user.getRole()
-        );
+        return toResponse(user, jwtUtils.genererToken(user));
     }
 
-    /** Création d'un compte étudiant / professeur */
     @Transactional
     public AuthDtos.LoginResponse register(AuthDtos.RegisterRequest req) {
         if (utilisateurRepo.existsByEmail(req.getEmail())) {
@@ -63,14 +66,6 @@ public class AuthService {
                 .build();
 
         utilisateurRepo.save(user);
-
-        String token = jwtUtils.genererToken(user);
-        return new AuthDtos.LoginResponse(
-                token, "Bearer",
-                user.getId(),
-                user.getPrenom() + " " + user.getNom(),
-                user.getEmail(),
-                user.getRole()
-        );
+        return toResponse(user, jwtUtils.genererToken(user));
     }
 }

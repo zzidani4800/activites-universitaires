@@ -1,30 +1,60 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
-import { MemoryRouter } from 'react-router-dom'
-// Pages (on les créera juste après)
-import LoginEtudiant   from './pages/LoginEtudiant'
-import LoginAdmin      from './pages/LoginAdmin'
-import Inscription     from './pages/Inscription'
-import MesReservations from './pages/MesReservations'
-import Annulation      from './pages/Annulation'
-import DashboardAdmin  from './pages/DashboardAdmin'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './contexts/AuthContext'
+
+// Pages
+import LoginEtudiant         from './pages/LoginEtudiant'
+import LoginAdmin            from './pages/LoginAdmin'
+import Inscription           from './pages/Inscription'
+import MesReservations       from './pages/MesReservations'
+import Annulation            from './pages/Annulation'
+import DashboardAdmin        from './pages/DashboardAdmin'
+import AdminCreerUtilisateur from './pages/AdminCreerUtilisateur'
+
+function PrivateRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth()
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center text-on-surface-variant">
+      <span className="material-symbols-outlined animate-spin text-primary mr-2">progress_activity</span>
+      Chargement...
+    </div>
+  )
+  return isAuthenticated ? children : <Navigate to="/" replace />
+}
+
+function AdminRoute({ children }) {
+  const { user, isAuthenticated, loading } = useAuth()
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center text-on-surface-variant">
+      <span className="material-symbols-outlined animate-spin text-primary mr-2">progress_activity</span>
+      Chargement...
+    </div>
+  )
+  if (!isAuthenticated) return <Navigate to="/login-admin" replace />
+  if (user?.role !== 'ADMIN') return <Navigate to="/" replace />
+  return children
+}
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
-        {/* Page d'accueil = connexion étudiant */}
-        <Route path="/"                 element={<LoginEtudiant />} />
-        <Route path="/login-admin"      element={<LoginAdmin />} />
+        {/* Publiques */}
+        <Route path="/"            element={<LoginEtudiant />} />
+        <Route path="/login-admin" element={<LoginAdmin />} />
 
-        {/* Pages étudiant / prof */}
-        <Route path="/inscription"      element={<Inscription />} />
-        <Route path="/mes-reservations" element={<MesReservations />} />
-        <Route path="/annulation"       element={<Annulation />} />
+        {/* Étudiant */}
+        <Route path="/inscription"      element={<PrivateRoute><Inscription /></PrivateRoute>} />
+        <Route path="/mes-reservations" element={<PrivateRoute><MesReservations /></PrivateRoute>} />
+        <Route path="/annulation"       element={<PrivateRoute><Annulation /></PrivateRoute>} />
 
-        {/* Pages admin */}
-        <Route path="/admin/dashboard"  element={<DashboardAdmin />} />
+        {/* Admin */}
+        <Route path="/admin/dashboard"         element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
+        <Route path="/admin/creer-utilisateur" element={<AdminRoute><AdminCreerUtilisateur /></AdminRoute>} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
 
