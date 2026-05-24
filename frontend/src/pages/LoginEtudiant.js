@@ -53,15 +53,10 @@ function LoginEtudiant() {
                 <span className="text-primary italic">Académique</span> depuis 1975
               </h2>
               <p className="text-on-surface-variant text-lg max-w-md leading-relaxed mb-8">
-                Accédez à votre espace personnel pour consulter vos cours, vos résultats
-                de recherche et l'agenda des symposiums universitaires.
+                Accédez à votre espace personnel pour consulter, réserver et rester informé de vos Conférences, Ateliers et Séminaires à l'Université Cadi Ayyad. Gérez vos inscriptions en toute simplicité.
               </p>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-surface-container-low p-6 rounded-xl">
-                  <span className="material-symbols-outlined text-primary mb-3 block">menu_book</span>
-                  <div className="font-bold text-on-surface">Ressources</div>
-                  <div className="text-sm text-on-surface-variant">Accès bibliothèques</div>
-                </div>
+                
                 <div className="bg-surface-container-low p-6 rounded-xl">
                   <span className="material-symbols-outlined text-primary mb-3 block">calendar_month</span>
                   <div className="font-bold text-on-surface">Événements</div>
@@ -81,16 +76,13 @@ function LoginEtudiant() {
                   <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mx-auto lg:mx-0 mb-6">
                     <span className="text-white font-bold font-headline text-sm">UCA</span>
                   </div>
-                  <h1 className="text-3xl font-display text-on-surface mb-2">Connexion Étudiant</h1>
-                  <p className="text-on-surface-variant text-sm tracking-wide uppercase font-medium">
-                    Portail de l'Archiviste Moderne
-                  </p>
+                  <h1 className="text-3xl font-display text-on-surface mb-2">Connexion Utilisateur</h1>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleConnexion}>
                   <div className="space-y-2">
                     <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">
-                      Email Académique
+                      Votre Email
                     </label>
                     <input
                       type="email"
@@ -103,7 +95,7 @@ function LoginEtudiant() {
 
                   <div className="space-y-2">
                     <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">
-                      Mot de passe (votre CNE) en minuscule
+                      Mot de passe
                     </label>
                     <div className="relative">
                       <input

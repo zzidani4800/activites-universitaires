@@ -85,15 +85,13 @@ function LoginAdmin() {
                     <span className="material-symbols-outlined text-white">shield_person</span>
                   </div>
                   <h1 className="text-3xl font-display text-on-surface mb-2">Connexion Admin</h1>
-                  <p className="text-on-surface-variant text-sm tracking-wide uppercase font-medium">
-                    Portail de l'Archiviste Moderne
-                  </p>
+                  
                 </div>
 
                 <form className="space-y-6" onSubmit={handleConnexion}>
                   <div className="space-y-2">
                     <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">
-                      Email Académique
+                      Votre Email
                     </label>
                     <input
                       type="email"

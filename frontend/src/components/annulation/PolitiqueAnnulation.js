@@ -27,7 +27,7 @@ function PolitiqueAnnulation() {
     {
       icone: 'mark_email_read',
       titre: 'Confirmation par email',
-      texte: "Un email de confirmation vous sera envoyé à votre adresse institutionnelle après validation de l'annulation.",
+      texte: "Un email de confirmation vous sera envoyé à votre adresse email après validation de l'annulation.",
       accent: null,
     },
   ]

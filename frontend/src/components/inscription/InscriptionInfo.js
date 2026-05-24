@@ -18,7 +18,7 @@ function InscriptionInfo() {
       <div className="flex items-start gap-3 mb-5">
         <span className="material-symbols-outlined text-primary text-xl mt-0.5">verified</span>
         <div>
-          <p className="font-bold text-on-surface text-sm">Validation Institutionnelle</p>
+          <p className="font-bold text-on-surface text-sm">Validation</p>
           <p className="text-on-surface-variant text-xs mt-1">
             Vérification immédiate via le registre central de l'Université Cadi Ayyad.
           </p>
@@ -30,7 +30,7 @@ function InscriptionInfo() {
         <div>
           <p className="font-bold text-on-surface text-sm">Notification de Confirmation</p>
           <p className="text-on-surface-variant text-xs mt-1">
-            Un récépissé numérique sera envoyé à votre adresse institutionnelle.
+            Une réponse de l'administration sera envoyée à votre adresse email.
           </p>
         </div>
       </div>
