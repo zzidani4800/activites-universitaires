@@ -47,7 +47,7 @@ class ReservationServiceTest {
                 .id(1L)
                 .prenom("Omar")
                 .nom("Ouali")
-                .email("o.ouali@uca.ac.ma")
+                .email("o.ouali@gmail.com")
                 .role(Utilisateur.Role.ETUDIANT)
                 .departement(Utilisateur.Departement.INFORMATIQUE)
                 .build();
@@ -122,7 +122,7 @@ class ReservationServiceTest {
     // ── annuler ───────────────────────────────────────────
 
     @Test
-    @DisplayName("annuler → passe le statut à REFUSÉ")
+    @DisplayName("annuler → passe le statut à ANNULE")
     void annuler_ok() {
         when(demandeRepo.findById(1L)).thenReturn(Optional.of(demande));
         when(demandeRepo.save(any())).thenReturn(demande);
@@ -130,7 +130,7 @@ class ReservationServiceTest {
         DemandeReservationDtos.DemandeResponse response =
                 reservationService.annuler(organisateur, 1L);
 
-        assertThat(response.getStatut()).isEqualTo("REFUSÉ");
+        assertThat(response.getStatut()).isEqualTo("ANNULE");
         assertThat(response.getMotifRefus())
                 .isEqualTo("Annulé par l'organisateur");
     }
@@ -177,7 +177,7 @@ class ReservationServiceTest {
                 .id(99L)
                 .prenom("Autre")
                 .nom("User")
-                .email("autre@uca.ac.ma")
+                .email("autre@gmail.com")
                 .build();
 
         when(demandeRepo.findById(1L)).thenReturn(Optional.of(demande));

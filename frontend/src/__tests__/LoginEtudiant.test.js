@@ -1,17 +1,20 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import LoginEtudiant from '../pages/LoginEtudiant'
+import { AuthProvider } from '../contexts/AuthContext'
 
 const renderPage = () =>
   render(
-    <MemoryRouter 
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-      }}
-    >
-      <LoginEtudiant />
-    </MemoryRouter>
+    <AuthProvider>
+      <MemoryRouter 
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <LoginEtudiant />
+      </MemoryRouter>
+    </AuthProvider>
   )
 
 test('affiche le titre Connexion Étudiant', () => {
@@ -21,7 +24,7 @@ test('affiche le titre Connexion Étudiant', () => {
 
 test('affiche les champs email et mot de passe', () => {
   renderPage()
-  expect(screen.getByPlaceholderText('prenom.nom@uca.ac.ma')).toBeInTheDocument()
+  expect(screen.getByPlaceholderText('prenom.nom@gmail.com')).toBeInTheDocument()
   expect(screen.getByPlaceholderText('••••••••••••')).toBeInTheDocument()
 })
 
@@ -34,7 +37,7 @@ test('affiche une erreur si les champs sont vides', () => {
 
 test('les champs acceptent la saisie', () => {
   renderPage()
-  const inputEmail = screen.getByPlaceholderText('prenom.nom@uca.ac.ma')
-  fireEvent.change(inputEmail, { target: { value: 'test@uca.ac.ma' } })
-  expect(inputEmail.value).toBe('test@uca.ac.ma')
+  const inputEmail = screen.getByPlaceholderText('prenom.nom@gmail.com')
+  fireEvent.change(inputEmail, { target: { value: 'test@gmail.com' } })
+  expect(inputEmail.value).toBe('test@gmail.com')
 })

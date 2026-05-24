@@ -21,37 +21,37 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final UtilisateurRepository        utilisateurRepo;
+    private final UtilisateurRepository utilisateurRepo;
     private final DemandeReservationRepository demandeRepo;
-    private final ReservationService           reservationService;
-    private final PasswordEncoder              passwordEncoder;  // ← AJOUTER CETTE LIGNE
+    private final ReservationService reservationService;
+    private final PasswordEncoder passwordEncoder; // AJOUTER CETTE LIGNE
 
     // ── Dashboard ─────────────────────────────────────────
 
     @Transactional(readOnly = true)
     public Map<String, Object> getStats() {
-        long total      = demandeRepo.count();
-        long enAttente  = demandeRepo.countByStatut(Statut.EN_ATTENTE);
+        long total = demandeRepo.count();
+        long enAttente = demandeRepo.countByStatut(Statut.EN_ATTENTE);
         long confirmees = demandeRepo.countByStatut(Statut.CONFIRMÉ);
-        long refusees   = demandeRepo.countByStatut(Statut.REFUSÉ);
+        long refusees = demandeRepo.countByStatut(Statut.REFUSÉ);
 
         double taux = total > 0
-            ? Math.round((confirmees * 100.0 / total) * 10.0) / 10.0
-            : 0;
+                ? Math.round((confirmees * 100.0 / total) * 10.0) / 10.0
+                : 0;
 
         long conflits = demandeRepo.findAll().stream()
-            .filter(d -> d.getStatut() != Statut.REFUSÉ)
-            .collect(Collectors.groupingBy(
-                d -> d.getSalle() + "|" + d.getDate() + "|" + d.getCreneau(),
-                Collectors.counting()))
-            .values().stream().filter(c -> c > 1).count();
+                .filter(d -> d.getStatut() != Statut.REFUSÉ)
+                .collect(Collectors.groupingBy(
+                        d -> d.getSalle() + "|" + d.getDate() + "|" + d.getCreneau(),
+                        Collectors.counting()))
+                .values().stream().filter(c -> c > 1).count();
 
         Map<String, Object> stats = new LinkedHashMap<>();
-        stats.put("demandesTotal",    total);
-        stats.put("enAttente",        enAttente);
-        stats.put("confirmees",       confirmees);
-        stats.put("refusees",         refusees);
-        stats.put("tauxApprobation",  taux + "%");
+        stats.put("demandesTotal", total);
+        stats.put("enAttente", enAttente);
+        stats.put("confirmees", confirmees);
+        stats.put("refusees", refusees);
+        stats.put("tauxApprobation", taux + "%");
         stats.put("conflitsDetectes", conflits);
         return stats;
     }
@@ -90,11 +90,16 @@ public class AdminService {
         Utilisateur u = utilisateurRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Utilisateur introuvable"));
 
-        if (req.getPrenom()         != null) u.setPrenom(req.getPrenom());
-        if (req.getNom()            != null) u.setNom(req.getNom());
-        if (req.getRole()           != null) u.setRole(req.getRole());
-        if (req.getDepartement()    != null) u.setDepartement(req.getDepartement());
-        if (req.getNumeroEtudiant() != null) u.setNumeroEtudiant(req.getNumeroEtudiant());
+        if (req.getPrenom() != null)
+            u.setPrenom(req.getPrenom());
+        if (req.getNom() != null)
+            u.setNom(req.getNom());
+        if (req.getRole() != null)
+            u.setRole(req.getRole());
+        if (req.getDepartement() != null)
+            u.setDepartement(req.getDepartement());
+        if (req.getNumeroEtudiant() != null)
+            u.setNumeroEtudiant(req.getNumeroEtudiant());
 
         // AJOUT : Hasher le mot de passe s'il est fourni
         if (req.getMotDePasse() != null && !req.getMotDePasse().isBlank()) {
@@ -103,7 +108,7 @@ public class AdminService {
             }
             String hashedPassword = passwordEncoder.encode(req.getMotDePasse());
             u.setMotDePasse(hashedPassword);
-            System.out.println("🔐 Mot de passe hashé pour " + u.getEmail());
+            System.out.println("Mot de passe hashé pour " + u.getEmail());
         }
 
         // Email : vérifier unicité si changé

@@ -97,7 +97,7 @@ function LoginAdmin() {
                     </label>
                     <input
                       type="email"
-                      placeholder="prenom.nom@uca.ac.ma"
+                      placeholder="prenom.nom@gmail.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-surface-container-highest border-b-2 border-transparent focus:border-primary px-4 py-4 rounded-t-lg transition-all duration-300 outline-none text-on-surface placeholder:text-outline/50"

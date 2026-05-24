@@ -59,8 +59,8 @@ function AdminUtilisateurs() {
   const handleSauvegarder = async () => {
     setSaving(true); setSaveErreur('')
     // Validation email
-    if (!editForm.email.endsWith('@uca.ac.ma')) {
-      setSaveErreur("L'email doit se terminer par @uca.ac.ma")
+    if (!editForm.email.trim()) {
+      setSaveErreur("Vous devez remplir ce champ avec une adresse Gmail")
       setSaving(false); return
     }
     try {
@@ -180,10 +180,7 @@ function AdminUtilisateurs() {
 
               <div className="space-y-1">
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Email</label>
-                <input type="email" value={editForm.email} onChange={e => setEditForm({...editForm, email: e.target.value})} className={ic} />
-                {editForm.email && !editForm.email.endsWith('@uca.ac.ma') && (
-                  <p className="text-xs text-error mt-1">Doit se terminer par @uca.ac.ma</p>
-                )}
+                <input type="email" value={editForm.email} onChange={e => setEditForm({...editForm, email: e.target.value})} className={ic} placeholder="exemple@gmail.com" />
               </div>
 
               <div className="space-y-1">

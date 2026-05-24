@@ -73,7 +73,7 @@ function PolitiqueAnnulation() {
         </div>
         <p className="text-xs text-on-surface-variant leading-relaxed">
           Pour toute réservation confirmée ou litige, contactez l'administration à{' '}
-          <a href="mailto:admin@uca.ac.ma" className="text-primary underline">admin@uca.ac.ma</a>
+          <a href="mailto:admin@gmail.com" className="text-primary underline">admin@gmail.com</a>
         </p>
       </div>
     </div>

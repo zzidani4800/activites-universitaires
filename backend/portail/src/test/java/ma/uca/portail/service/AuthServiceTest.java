@@ -42,7 +42,7 @@ class AuthServiceTest {
                 .id(1L)
                 .prenom("Omar")
                 .nom("Ouali")
-                .email("o.ouali@uca.ac.ma")
+                .email("o.ouali@gmail.com")
                 .motDePasse("hashed_password")
                 .role(Utilisateur.Role.ETUDIANT)
                 .build();
@@ -54,10 +54,10 @@ class AuthServiceTest {
     @DisplayName("login → retourne token si identifiants corrects")
     void login_ok() {
         AuthDtos.LoginRequest req = new AuthDtos.LoginRequest();
-        req.setEmail("o.ouali@uca.ac.ma");
+        req.setEmail("o.ouali@gmail.com");
         req.setMotDePasse("ee123456");
 
-        when(utilisateurRepo.findByEmail("o.ouali@uca.ac.ma"))
+        when(utilisateurRepo.findByEmail("o.ouali@gmail.com"))
                 .thenReturn(Optional.of(utilisateur));
         when(passwordEncoder.matches("ee123456", "hashed_password"))
                 .thenReturn(true);
@@ -67,7 +67,7 @@ class AuthServiceTest {
         AuthDtos.LoginResponse response = authService.login(req);
 
         assertThat(response.getToken()).isEqualTo("fake_token");
-        assertThat(response.getEmail()).isEqualTo("o.ouali@uca.ac.ma");
+        assertThat(response.getEmail()).isEqualTo("o.ouali@gmail.com");
         assertThat(response.getRole()).isEqualTo(Utilisateur.Role.ETUDIANT);
     }
 
@@ -75,10 +75,10 @@ class AuthServiceTest {
     @DisplayName("login → exception si email introuvable")
     void login_emailIntrouvable() {
         AuthDtos.LoginRequest req = new AuthDtos.LoginRequest();
-        req.setEmail("inconnu@uca.ac.ma");
+        req.setEmail("inconnu@gmail.com");
         req.setMotDePasse("password");
 
-        when(utilisateurRepo.findByEmail("inconnu@uca.ac.ma"))
+        when(utilisateurRepo.findByEmail("inconnu@gmail.com"))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> authService.login(req))
@@ -90,10 +90,10 @@ class AuthServiceTest {
     @DisplayName("login → exception si mot de passe incorrect")
     void login_mauvaisMotDePasse() {
         AuthDtos.LoginRequest req = new AuthDtos.LoginRequest();
-        req.setEmail("o.ouali@uca.ac.ma");
+        req.setEmail("o.ouali@gmail.com");
         req.setMotDePasse("mauvais");
 
-        when(utilisateurRepo.findByEmail("o.ouali@uca.ac.ma"))
+        when(utilisateurRepo.findByEmail("o.ouali@gmail.com"))
                 .thenReturn(Optional.of(utilisateur));
         when(passwordEncoder.matches("mauvais", "hashed_password"))
                 .thenReturn(false);
@@ -111,7 +111,7 @@ class AuthServiceTest {
         AuthDtos.RegisterRequest req = new AuthDtos.RegisterRequest();
         req.setPrenom("Amina");
         req.setNom("Mansouri");
-        req.setEmail("a.mansouri@uca.ac.ma");
+        req.setEmail("a.mansouri@gmail.com");
         req.setMotDePasse("password123");
         req.setNumeroEtudiant("EE999");
         req.setRole(Utilisateur.Role.ETUDIANT);
@@ -132,10 +132,10 @@ class AuthServiceTest {
     @DisplayName("register → exception si email déjà utilisé")
     void register_emailDejaUtilise() {
         AuthDtos.RegisterRequest req = new AuthDtos.RegisterRequest();
-        req.setEmail("o.ouali@uca.ac.ma");
+        req.setEmail("o.ouali@gmail.com");
         req.setMotDePasse("password");
 
-        when(utilisateurRepo.existsByEmail("o.ouali@uca.ac.ma"))
+        when(utilisateurRepo.existsByEmail("o.ouali@gmail.com"))
                 .thenReturn(true);
 
         assertThatThrownBy(() -> authService.register(req))
@@ -147,7 +147,7 @@ class AuthServiceTest {
     @DisplayName("register → exception si numéro étudiant déjà utilisé")
     void register_numeroDejaUtilise() {
         AuthDtos.RegisterRequest req = new AuthDtos.RegisterRequest();
-        req.setEmail("nouveau@uca.ac.ma");
+        req.setEmail("nouveau@gmail.com");
         req.setMotDePasse("password");
         req.setNumeroEtudiant("EE123456");
 
@@ -166,7 +166,7 @@ class AuthServiceTest {
         AuthDtos.RegisterRequest req = new AuthDtos.RegisterRequest();
         req.setPrenom("Test");
         req.setNom("User");
-        req.setEmail("test@uca.ac.ma");
+        req.setEmail("test@gmail.com");
         req.setMotDePasse("password");
         req.setRole(null);
 

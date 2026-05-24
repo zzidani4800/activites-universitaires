@@ -44,7 +44,7 @@ class AdminServiceTest {
                 .id(1L)
                 .prenom("Omar")
                 .nom("Ouali")
-                .email("o.ouali@uca.ac.ma")
+                .email("o.ouali@gmail.com")
                 .role(Utilisateur.Role.ETUDIANT)
                 .build();
     }
@@ -95,7 +95,7 @@ class AdminServiceTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getEmail())
-                .isEqualTo("o.ouali@uca.ac.ma");
+                .isEqualTo("o.ouali@gmail.com");
     }
 
     // ── modifierUtilisateur ───────────────────────────────
@@ -140,20 +140,22 @@ class AdminServiceTest {
     @Test
     @DisplayName("supprimerUtilisateur → supprime correctement")
     void supprimerUtilisateur_ok() {
-        when(utilisateurRepo.existsById(1L)).thenReturn(true);
-        doNothing().when(utilisateurRepo).deleteById(1L);
+       when(utilisateurRepo.findById(1L)).thenReturn(Optional.of(utilisateur));
+    when(demandeRepo.findByOrganisateur(utilisateur)).thenReturn(List.of());
+    doNothing().when(demandeRepo).deleteAll(any());
+    doNothing().when(utilisateurRepo).delete(utilisateur);
 
-        assertThatCode(() ->
-                adminService.supprimerUtilisateur(1L))
-                .doesNotThrowAnyException();
+    assertThatCode(() ->
+            adminService.supprimerUtilisateur(1L))
+            .doesNotThrowAnyException();
 
-        verify(utilisateurRepo, times(1)).deleteById(1L);
+    verify(utilisateurRepo, times(1)).delete(utilisateur);
     }
 
     @Test
     @DisplayName("supprimerUtilisateur → exception si introuvable")
     void supprimerUtilisateur_introuvable() {
-        when(utilisateurRepo.existsById(99L)).thenReturn(false);
+        when(utilisateurRepo.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->
                 adminService.supprimerUtilisateur(99L))

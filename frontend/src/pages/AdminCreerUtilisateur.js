@@ -54,9 +54,7 @@ function AdminCreerUtilisateur() {
   const valider = () => {
     if (!form.prenom.trim()) return 'Le prénom est obligatoire.'
     if (!form.nom.trim())    return 'Le nom est obligatoire.'
-    if (!form.email.trim())  return "L'email est obligatoire."
-    if (!form.email.endsWith('@uca.ac.ma'))
-      return "L'email doit être une adresse institutionnelle (@uca.ac.ma)."
+    if (!form.email.trim())  return "Vous devez remplir ce champ avec une adresse Gmail"
     if (!form.motDePasse || form.motDePasse.length < 6)
       return 'Le mot de passe doit contenir au moins 6 caractères.'
     return null
@@ -135,12 +133,7 @@ function AdminCreerUtilisateur() {
 
           <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8">
 
-            <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 flex items-start gap-2 mb-6 text-sm">
-              <span className="material-symbols-outlined text-primary text-base mt-0.5">info</span>
-              <span className="text-on-surface-variant">
-                L'email doit être une adresse institutionnelle <strong className="text-on-surface">@uca.ac.ma</strong>
-              </span>
-            </div>
+
 
             <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -158,13 +151,8 @@ function AdminCreerUtilisateur() {
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest">Email *</label>
                 <input name="email" type="email" value={form.email} onChange={handleChange}
-                  placeholder="z.zidane@uca.ac.ma" className={ic} />
-                {form.email && !form.email.endsWith('@uca.ac.ma') && (
-                  <p className="text-xs text-error mt-1 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">error</span>
-                    Doit se terminer par @uca.ac.ma
-                  </p>
-                )}
+                  placeholder="z.zidane@gmail.com" className={ic} />
+
               </div>
 
               <div className="space-y-1">

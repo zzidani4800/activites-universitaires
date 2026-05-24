@@ -41,10 +41,10 @@ public class DataLoader implements CommandLineRunner {
 
                 // ── Organisateurs de démo ─────────────────────────
                 Utilisateur etudiant1 = utilisateurRepo
-                                .findByEmail("o.ouali@uca.ac.ma")
+                                .findByEmail("o.ouali@gmail.com")
                                 .orElseGet(() -> utilisateurRepo.save(Utilisateur.builder()
                                                 .prenom("Omar").nom("Ouali")
-                                                .email("o.ouali@uca.ac.ma")
+                                                .email("o.ouali@gmail.com")
                                                 .motDePasse(passwordEncoder.encode("ee123456"))
                                                 .numeroEtudiant("EE123456")
                                                 .role(Utilisateur.Role.ETUDIANT)
@@ -52,10 +52,10 @@ public class DataLoader implements CommandLineRunner {
                                                 .build()));
 
                 Utilisateur etudiant2 = utilisateurRepo
-                                .findByEmail("a.mansouri@uca.ac.ma")
+                                .findByEmail("a.mansouri@gmail.com")
                                 .orElseGet(() -> utilisateurRepo.save(Utilisateur.builder()
                                                 .prenom("Amina").nom("Mansouri")
-                                                .email("a.mansouri@uca.ac.ma")
+                                                .email("a.mansouri@gmail.com")
                                                 .motDePasse(passwordEncoder.encode("ee654321"))
                                                 .numeroEtudiant("EE654321")
                                                 .role(Utilisateur.Role.ETUDIANT)
@@ -63,10 +63,10 @@ public class DataLoader implements CommandLineRunner {
                                                 .build()));
 
                 Utilisateur prof = utilisateurRepo
-                                .findByEmail("k.benali@uca.ac.ma")
+                                .findByEmail("k.benali@gmail.com")
                                 .orElseGet(() -> utilisateurRepo.save(Utilisateur.builder()
                                                 .prenom("Khalid").nom("Benali")
-                                                .email("k.benali@uca.ac.ma")
+                                                .email("k.benali@gmail.com")
                                                 .motDePasse(passwordEncoder.encode("prof1234"))
                                                 .role(Utilisateur.Role.PROFESSEUR)
                                                 .departement(Utilisateur.Departement.BIOLOGIE)
@@ -135,7 +135,7 @@ public class DataLoader implements CommandLineRunner {
 
                 System.out.println(" DataLoader : données de démo chargées.");
                 System.out.println("   Admin    : " + adminEmail + " / " + adminPassword);
-                System.out.println("   Étudiant : o.ouali@uca.ac.ma / ee123456");
-                System.out.println("   Prof     : k.benali@uca.ac.ma / prof1234");
+                System.out.println("   Étudiant : o.ouali@gmail.com / ee123456");
+                System.out.println("   Prof     : k.benali@gmail.com / prof1234");
         }
 }
