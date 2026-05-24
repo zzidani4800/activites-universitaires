@@ -17,9 +17,9 @@ const renderPage = () =>
     </AuthProvider>
   )
 
-test('affiche le titre Connexion Étudiant', () => {
+test('affiche le titre Connexion Utilisateur', () => {
   renderPage()
-  expect(screen.getByText('Connexion Étudiant')).toBeInTheDocument()
+  expect(screen.getByText('Connexion Utilisateur')).toBeInTheDocument()
 })
 
 test('affiche les champs email et mot de passe', () => {
