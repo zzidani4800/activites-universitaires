@@ -1,0 +1,43 @@
+# ── Environment Variables ──
+.env
+.env.local
+.env.*.local
+.env.production
+
+# ── Backend (Maven) ──
+backend/portail/target/
+backend/portail/.classpath
+backend/portail/.project
+backend/portail/.settings/
+backend/portail/bin/
+backend/portail/*.jar
+
+# ── Frontend (Node.js) ──
+frontend/node_modules/
+frontend/npm-debug.log
+frontend/yarn-error.log
+frontend/dist/
+frontend/build/
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# ── OS ──
+Thumbs.db
+.DS_Store
+
+# ── Logs ──
+*.log
+logs/
+
+# ── Misc ──
+.history/
+.cache/

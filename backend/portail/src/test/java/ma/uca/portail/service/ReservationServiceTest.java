@@ -34,6 +34,9 @@ class ReservationServiceTest {
     @Mock
     private DemandeReservationRepository demandeRepo;
 
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
     private ReservationService reservationService;
 

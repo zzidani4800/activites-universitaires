@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
     private final DemandeReservationRepository demandeRepo;
+    private final EmailService emailService;
 
     // ── Organisateur ─────────────────────────────────────
 
@@ -168,8 +169,22 @@ public class ReservationService {
         d.setMotifRefus(motif);
         d.setDateDecision(LocalDateTime.now());
 
+        // Sauvegarder la demande
+        DemandeReservation saved = demandeRepo.save(d);
+
+        // Envoyer l'email automatiquement selon le statut
+        String emailOrganisateur = d.getOrganisateur().getEmail();
+        String nomOrganisateur = d.getOrganisateur().getPrenom() + " " + d.getOrganisateur().getNom();
+        String titreEvenement = d.getTitreEvenement();
+
+        if (decision == Statut.CONFIRMÉ) {
+            emailService.envoyerEmailConfirmation(emailOrganisateur, nomOrganisateur, titreEvenement);
+        } else if (decision == Statut.REFUSÉ) {
+            emailService.envoyerEmailRefus(emailOrganisateur, nomOrganisateur, titreEvenement);
+        }
+
         return DemandeReservationDtos.DemandeResponse
-                .from(demandeRepo.save(d));
+                .from(saved);
     }
 
     // ── Utilitaire ────────────────────────────────────────
