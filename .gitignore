@@ -18,6 +18,7 @@ frontend/npm-debug.log
 frontend/yarn-error.log
 frontend/dist/
 frontend/build/
+frontend/.env.local
 
 # ── IDE ──
 .vscode/
