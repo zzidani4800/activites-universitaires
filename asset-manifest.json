@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/activites-universitaires/static/css/main.e3103d2d.css",
-    "main.js": "/activites-universitaires/static/js/main.6dfe8d37.js",
+    "main.js": "/activites-universitaires/static/js/main.05bc0e69.js",
     "index.html": "/activites-universitaires/index.html",
     "main.e3103d2d.css.map": "/activites-universitaires/static/css/main.e3103d2d.css.map",
-    "main.6dfe8d37.js.map": "/activites-universitaires/static/js/main.6dfe8d37.js.map"
+    "main.05bc0e69.js.map": "/activites-universitaires/static/js/main.05bc0e69.js.map"
   },
   "entrypoints": [
     "static/css/main.e3103d2d.css",
-    "static/js/main.6dfe8d37.js"
+    "static/js/main.05bc0e69.js"
   ]
 }
