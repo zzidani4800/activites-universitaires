@@ -43,9 +43,11 @@ Application web full-stack permettant aux étudiants et professeurs de l'Univers
 ---
 
 ## Structure du projet
+```
 activites-universitaires/
 ├── .github/workflows/
 ├── backend/portail/
+│   ├── Dockerfile
 │   ├── pom.xml
 │   └── src/
 │       ├── main/java/ma/uca/portail/
@@ -66,6 +68,7 @@ activites-universitaires/
         ├── contexts/
         ├── pages/
         └── services/
+```
 
 ---
 
